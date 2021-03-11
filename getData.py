@@ -27,6 +27,7 @@ def getData(stock,startDate,endDate):
                                       'yahoo',
                                       startDate,
                                       endDate)
+        stock_data.round(2)
         
         #shift close price so the next days close is on the each row at the end
         stock_data['Adj Close'] = stock_data['Adj Close'].shift(-1)
@@ -48,8 +49,9 @@ def getData(stock,startDate,endDate):
 
     
 
-
-
-
 # get stock info
 
+#for testing 
+# startDate = "2010-01-01"
+# endDate = "2020-01-01"
+# data = getData("CNR",startDate,endDate)

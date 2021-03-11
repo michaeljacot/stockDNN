@@ -15,9 +15,9 @@ from sklearn.model_selection import train_test_split
 
 train_to_test_ratio = 0.8
 optimizer = "SGD"
-activation = "softmax"
+activation = "softmax" #relu,softmax,leakyrelu,prelu,elu,thresholdedrelu
 loss = "mean_squared_error"
-epochs = 2000
+epochs = 100
 
 ############################
 
@@ -55,8 +55,8 @@ def createModel(trainX,trainY):
     model.add(keras.layers.Dense(15,activation = activation))
     model.add(keras.layers.Dense(20,activation = activation))
     model.add(keras.layers.Dense(20,activation = activation))
-    model.add(keras.layers.Dense(20,activation = activation))
-    model.add(keras.layers.Dense(20,activation = activation))
+    model.add(keras.layers.Dense(2000,activation = activation))
+    model.add(keras.layers.Dense(2000,activation = activation))
     model.add(keras.layers.Dense(20,activation = activation))
     model.add(keras.layers.Dense(20,activation = activation))
     model.add(keras.layers.Dense(15,activation = activation))
@@ -66,8 +66,8 @@ def createModel(trainX,trainY):
     model.compile(optimizer = optimizer,loss = loss)
     
     callback = keras.callbacks.EarlyStopping(monitor='loss', patience=19)
-    #model.fit(trainX,trainY,epochs = epochs,callbacks=[callback])
-    model.fit(trainX,trainY,epochs = epochs)
+    model.fit(trainX,trainY,epochs = epochs,callbacks=[callback])
+    #model.fit(trainX,trainY,epochs = epochs)
     
     #model.save("myModel")
     
@@ -78,16 +78,19 @@ def testModel(model,testX,testY):
     print("The model gets a score of " + str(model.evaluate(testX,testY)) + " on this test data")
 
 
+    for i in range(6):
 
-    test = testX[0]
-    test = np.array(test)
-    test = test.reshape(-1,5)
+        test = testX[i]
+        test = np.array(test)
+        test = test.reshape(-1,5)
+    
+        print(str(model.predict(test)) + " when it is actually " + str(testY[i]))
+        
 
-    print(str(model.predict(test)) + " when it is actually " + str(testY[0]))
 
 
 
-trainX,trainY,testX,testY = processData("VOO", startDate, endDate)
+trainX,trainY,testX,testY = processData("CNR", startDate, endDate)
 
 model = createModel(trainX,trainY)
 
