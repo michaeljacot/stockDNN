@@ -9,6 +9,10 @@ import yfinance as yf
 from datetime import datetime
 from pandas_datareader import data
 from pandas_datareader._utils import RemoteDataError
+from SupportResistanceMethod import getLines
+import matplotlib.pyplot as plt
+from lineCalc import plotLine , getPointOnLine
+import numpy as np
 
 
 
@@ -29,6 +33,18 @@ def getData(stock,startDate,endDate):
                                       endDate)
         stock_data.round(2)
         
+        closes = stock_data['Close']
+        sLines,rLines,aLines,intervals = getLines(closes,True,[],False)
+        
+        s = addLineVals(sLines,intervals,closes)
+        r = addLineVals(rLines,intervals,closes)
+        a = addLineVals(aLines,intervals,closes)
+        
+        
+        stock_data["Support Values"] = s
+        stock_data["Resistance Values"] = r
+        stock_data["Average Values"] = a
+
         #shift close price so the next days close is on the each row at the end
         stock_data['Adj Close'] = stock_data['Adj Close'].shift(-1)
         
@@ -41,6 +57,13 @@ def getData(stock,startDate,endDate):
         #remove next day close prices from x data
         
         x = stock_data.drop(columns = "Adj Close",axis = 1)
+        
+        
+        plt.plot(closes)
+
+
+
+        
     
         return x , y 
     
@@ -48,6 +71,35 @@ def getData(stock,startDate,endDate):
         print("Something went wrong")
 
     
+
+def addLineVals(lines,intervals,closes):
+        
+    vals = []
+    
+    x = np.arange(0,len(closes))
+
+
+    i = 0
+    while(i<len(intervals)):
+        thisLine = lines[i]
+
+        if i == 0:
+            thisOne = getPointOnLine(thisLine[0], thisLine[1], x[0:intervals[0]])
+            vals.extend(thisOne)
+            
+        if i == 1:
+            thisOne = getPointOnLine(thisLine[0], thisLine[1], x[intervals[0]:intervals[1]])
+            vals.extend(thisOne)
+            
+        if i == 2:
+            thisOne = getPointOnLine(thisLine[0], thisLine[1], x[intervals[1]:intervals[2]+1])
+            vals.extend(thisOne)
+            
+        i+=1    
+        
+        
+    return vals
+
 
 # get stock info
 

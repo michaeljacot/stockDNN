@@ -13,9 +13,9 @@ from sklearn.model_selection import train_test_split
 
 #HYPER PARAMATERS#
 
-train_to_test_ratio = 0.8
-optimizer = "SGD"
-activation = "softmax" #relu,softmax,leakyrelu,prelu,elu,thresholdedrelu
+train_to_test_ratio = 0.9
+optimizer = "Adam" # "SGD","RMSprop","Adam","Adadelta","Adagrad","Adamax","Nadam","Ftrl"
+activation = "relu" #relu,softmax,leakyrelu,prelu,elu,thresholdedrelu
 loss = "mean_squared_error"
 epochs = 100
 
@@ -50,8 +50,8 @@ def processData(stockName,startDate,endDate):
 def createModel(trainX,trainY):
     model = keras.Sequential()
     
-    model.add(keras.layers.Dense(5,activation = activation, input_shape = (5,)))
-    model.add(keras.layers.Dense(5,activation = activation))
+    model.add(keras.layers.Dense(8,activation = activation, input_shape = (8,)))
+    model.add(keras.layers.Dense(8,activation = activation))
     model.add(keras.layers.Dense(15,activation = activation))
     model.add(keras.layers.Dense(20,activation = activation))
     model.add(keras.layers.Dense(20,activation = activation))
@@ -82,7 +82,7 @@ def testModel(model,testX,testY):
 
         test = testX[i]
         test = np.array(test)
-        test = test.reshape(-1,5)
+        test = test.reshape(-1,8)
     
         print(str(model.predict(test)) + " when it is actually " + str(testY[i]))
         
