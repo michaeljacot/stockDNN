@@ -26,7 +26,6 @@ import numpy as np
 def getData(stock,startDate,endDate):
     
     try:
-        
         stock_data = data.DataReader(stock,
                                       'yahoo',
                                       startDate,
@@ -57,14 +56,9 @@ def getData(stock,startDate,endDate):
         #remove next day close prices from x data
         
         x = stock_data.drop(columns = "Adj Close",axis = 1)
-        
-        
+            
         plt.plot(closes)
 
-
-
-        
-    
         return x , y 
     
     except RemoteDataError:
@@ -72,17 +66,16 @@ def getData(stock,startDate,endDate):
 
     
 
-def addLineVals(lines,intervals,closes):
-        
+def addLineVals(lines,intervals,closes):    
     vals = []
     
     x = np.arange(0,len(closes))
-
-
+    
     i = 0
     while(i<len(intervals)):
         thisLine = lines[i]
-
+        
+        #I know this is a shitty way of doing this but whatever getLines only ever returns 2 or three indicies so if I ever change that then I will change this method
         if i == 0:
             thisOne = getPointOnLine(thisLine[0], thisLine[1], x[0:intervals[0]])
             vals.extend(thisOne)
@@ -96,8 +89,6 @@ def addLineVals(lines,intervals,closes):
             vals.extend(thisOne)
             
         i+=1    
-        
-        
     return vals
 
 

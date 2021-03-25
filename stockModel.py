@@ -10,6 +10,9 @@ import pandas as pd
 import keras
 from getData import getData
 from sklearn.model_selection import train_test_split
+from keras import regularizers
+from sklearn import preprocessing
+
 
 #HYPER PARAMATERS#
 
@@ -18,6 +21,7 @@ optimizer = "Adam" # "SGD","RMSprop","Adam","Adadelta","Adagrad","Adamax","Nadam
 activation = "relu" #relu,softmax,leakyrelu,prelu,elu,thresholdedrelu
 loss = "mean_squared_error"
 epochs = 100
+reg = regularizers.l2(0.01)
 
 ############################
 
@@ -30,6 +34,16 @@ def processData(stockName,startDate,endDate):
     
     
     trainX,testX,trainY,testY=train_test_split(x,y,train_size=train_to_test_ratio,test_size=1.0-train_to_test_ratio)
+    
+    x = trainX.values #returns a numpy array
+    min_max_scaler = preprocessing.MinMaxScaler()
+    x_scaled = min_max_scaler.fit_transform(x)
+    trainX = pd.DataFrame(x_scaled)
+    
+    x = testX.values #returns a numpy array
+    min_max_scaler = preprocessing.MinMaxScaler()
+    x_scaled = min_max_scaler.fit_transform(x)
+    testX = pd.DataFrame(x_scaled)
     
     
     trainX = np.array(trainX)
@@ -44,6 +58,9 @@ def processData(stockName,startDate,endDate):
     testY = np.array(testY)
     testY = testY.reshape(-1,1)
     
+    
+    #DO NORMALIZATION
+    
     return trainX,trainY,testX,testY
 
 
@@ -51,16 +68,16 @@ def createModel(trainX,trainY):
     model = keras.Sequential()
     
     model.add(keras.layers.Dense(8,activation = activation, input_shape = (8,)))
-    model.add(keras.layers.Dense(8,activation = activation))
-    model.add(keras.layers.Dense(15,activation = activation))
-    model.add(keras.layers.Dense(20,activation = activation))
-    model.add(keras.layers.Dense(20,activation = activation))
-    model.add(keras.layers.Dense(2000,activation = activation))
-    model.add(keras.layers.Dense(2000,activation = activation))
-    model.add(keras.layers.Dense(20,activation = activation))
-    model.add(keras.layers.Dense(20,activation = activation))
-    model.add(keras.layers.Dense(15,activation = activation))
-    model.add(keras.layers.Dense(5,activation = activation))
+    model.add(keras.layers.Dense(8,activation = activation,kernel_regularizer = reg))
+    model.add(keras.layers.Dense(15,activation = activation,kernel_regularizer = reg))
+    model.add(keras.layers.Dense(20,activation = activation,kernel_regularizer = reg))
+    model.add(keras.layers.Dense(20,activation = activation,kernel_regularizer = reg))
+    model.add(keras.layers.Dense(2000,activation = activation,kernel_regularizer = reg))
+    model.add(keras.layers.Dense(2000,activation = activation,kernel_regularizer = reg))
+    model.add(keras.layers.Dense(20,activation = activation,kernel_regularizer = reg))
+    model.add(keras.layers.Dense(20,activation = activation,kernel_regularizer = reg))
+    model.add(keras.layers.Dense(15,activation = activation,kernel_regularizer = reg))
+    model.add(keras.layers.Dense(5,activation = activation,kernel_regularizer = reg))
     model.add(keras.layers.Dense(1))
     
     model.compile(optimizer = optimizer,loss = loss)
