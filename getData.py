@@ -62,7 +62,7 @@ def getData(stock,startDate,endDate):
         return x , y 
     
     except RemoteDataError:
-        print("Something went wrong")
+        print("I dont think I know that ticker symbol")
 
     
 
