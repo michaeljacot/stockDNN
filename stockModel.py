@@ -5,7 +5,7 @@ Created on Fri Mar  5 12:13:36 2021
 @author: Michael
 """
 
-import numpy as np
+import numpy as np 
 import pandas as pd
 import keras
 from getData import getData
@@ -17,20 +17,22 @@ import testClass
 
 #HYPER PARAMATERS#
 
-train_to_test_ratio = 0.8
-optimizer = "Ftrl" # "SGD","RMSprop","Adam","Adadelta","Adagrad","Adamax","Nadam","Ftrl"
-activation = "tanh" #relu,softmax,leakyrelu,prelu,elu,thresholdedrelu
+train_to_test_ratio = 0.7 
+optimizer = "nadam" # "SGD","RMSprop","Adam","Adadelta","Adagrad","Adamax","Nadam","Ftrl"
+activation = "softmax" #relu,softmax,leakyrelu,prelu,elu,thresholdedrelu
 loss = "mean_absolute_error"
-epochs = 5000
+epochs = 2000
 reg = regularizers.l2(0.01)
 
 ############################
 
 startDate = "2010-01-01"
-endDate = "2020-01-01"
+endDate = "2020-01-01" 
 
 def processData(stockName,startDate,endDate):
 
+    print("Starting Data pull between " + startDate + " and " + endDate + " for " + stockName + " at one day intervals...")
+    
     x,y = getData(stockName,startDate,endDate)
     
     
@@ -102,8 +104,11 @@ def testModel(model,testX,testY):
         test = np.array(test)
         test = test.reshape(-1,8)
     
-        print(str(model.predict(test)) + " when it is actually " + str(testY[i]))
         
+        print(str(model.predict_on_batch(test)) + " when it is actually " + str(testY[i]))
+        
+
+
 
 
 
@@ -114,11 +119,14 @@ model = createModel(trainX,trainY)
 print(len(model.layers))
 testModel(model,testX,testY)
 
-
-
 test = testClass.testClass()
 
-#activationResults = test.testActivations(model,trainX,trainY,testX,testY,loss,optimizer)
+optimizerResults, newmodel = test.testOptimizers(model,trainX,trainY,testX,testY,loss)
+
+
+
+
+#testModel(newmodel,testX,testY)
 
 
 def loadModel(modelName):

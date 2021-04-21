@@ -100,7 +100,7 @@ class testClass:
         
         for o in self.optimizers:
             model.compile(optimizer = o,loss = loss)
-            model.fit(trainX,trainY,epochs = 3000)
+            model.fit(trainX,trainY,epochs = 300)
 
             optimizerResult.append(model.evaluate(testX))
             
@@ -108,7 +108,7 @@ class testClass:
         bestIndex = optimizerResult.index(bestResult)
         print("The model preformed the best was " + str(self.optimizers[bestIndex]))
         
-        return optimizerResult
+        return optimizerResult ,model
             
     
     def testActivations(self,model,trainX,trainY,testX,testY,loss,optimizer):

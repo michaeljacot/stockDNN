@@ -7,7 +7,7 @@ Created on Fri Mar  5 12:16:16 2021
 
 import yfinance as yf
 from datetime import datetime
-from pandas_datareader import data
+from pandas_datareader import data as d
 from pandas_datareader._utils import RemoteDataError
 from SupportResistanceMethod import getLines
 import matplotlib.pyplot as plt
@@ -26,7 +26,7 @@ import numpy as np
 def getData(stock,startDate,endDate):
     
     try:
-        stock_data = data.DataReader(stock,
+        stock_data = d.DataReader(stock,
                                       'yahoo',
                                       startDate,
                                       endDate)
@@ -56,8 +56,10 @@ def getData(stock,startDate,endDate):
         #remove next day close prices from x data
         
         x = stock_data.drop(columns = "Adj Close",axis = 1)
-            
+        
+        plt.title("Closing prices for " + stock)
         plt.plot(closes)
+        
 
         return x , y 
     
