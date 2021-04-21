@@ -30,6 +30,7 @@ def getData(stock,startDate,endDate):
                                       'yahoo',
                                       startDate,
                                       endDate)
+        #do this to help loss
         stock_data.round(2)
         
         closes = stock_data['Close']

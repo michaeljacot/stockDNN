@@ -17,9 +17,9 @@ import testClass
 
 #HYPER PARAMATERS#
 
-train_to_test_ratio = 0.7 
+train_to_test_ratio = 0.9
 optimizer = "nadam" # "SGD","RMSprop","Adam","Adadelta","Adagrad","Adamax","Nadam","Ftrl"
-activation = "softmax" #relu,softmax,leakyrelu,prelu,elu,thresholdedrelu
+activation = "relu" #relu,softmax,leakyrelu,prelu,elu,thresholdedrelu
 loss = "mean_absolute_error"
 epochs = 2000
 reg = regularizers.l2(0.01)
@@ -109,24 +109,17 @@ def testModel(model,testX,testY):
         
 
 
-
-
-
-
 trainX,trainY,testX,testY = processData("CNR", startDate, endDate)
 
 model = createModel(trainX,trainY)
 print(len(model.layers))
 testModel(model,testX,testY)
 
+#comment the two lines below if you want to turn off the hyperparamater optimization
+
 test = testClass.testClass()
 
 optimizerResults, newmodel = test.testOptimizers(model,trainX,trainY,testX,testY,loss)
-
-
-
-
-#testModel(newmodel,testX,testY)
 
 
 def loadModel(modelName):
@@ -140,35 +133,4 @@ def loadModel(modelName):
     
 #these are the results of optimizing the optimizer on 3000 epochs
 
-# 0
-# float
-# 1
-# 2.0336881222238467e-16
-# 1
-# float
-# 1
-# 5.045063971920172e-06
-# 2
-# float
-# 1
-# 3.586567501323579e-11
-# 3
-# float
-# 1
-# 1.0252128498629363e-14
-# 4
-# float
-# 1
-# 6.365674247933276e-26
-# 5
-# float
-# 1
-# 7.258389445041757e-10
-# 6
-# float
-# 1
-# 8.74487611213226e-08
-# 7
-# float
-# 1
-# 2.1721883989473264e-27
+
